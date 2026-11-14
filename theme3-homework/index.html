@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Theme 3 Homework - Two Proportions and Chi-Square</title>
+<link rel="stylesheet" href="assets/house.css">
+<link rel="stylesheet" href="assets/styles.css">
+<script defer src="assets/app.js"></script>
+<script>
+(function () {
+  var base = "https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/";
+  var css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = base + "katex.min.css";
+  document.head.appendChild(css);
+  function load(src, next) {
+    var s = document.createElement("script");
+    s.src = src;
+    s.onload = next;
+    document.head.appendChild(s);
+  }
+  function render() {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},
+        {left: "$", right: "$", display: false}
+      ],
+      throwOnError: false
+    });
+    document.querySelectorAll(".katex-display").forEach(function (el) {
+      el.style.overflowX = "auto";
+      el.style.overflowY = "hidden";
+      el.style.position = "relative";
+    });
+    document.querySelectorAll(".katex").forEach(function (el) {
+      el.style.position = "relative";
+    });
+  }
+  load(base + "katex.min.js", function () {
+    load(base + "contrib/auto-render.min.js", function () {
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", render);
+      } else {
+        render();
+      }
+    });
+  });
+}());
+</script>
+</head>
+<body data-current-page="theme3" data-template-id="swift-house-solutions-v1">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="brand"><span class="brand__name">Swift Tuition</span><span class="brand__chapter">STC 122</span></div>
+      <span class="site-header__tag">Worked solutions</span>
+    </div>
+  </header>
+  <header class="page-head">
+    <p class="eyebrow">STC 122 Homework</p>
+    <h1 class="page-title">Theme 3 Homework: Two Proportions and Chi-Square</h1>
+    <p class="page-subtitle">Worked solutions for inference with one and two proportions and two-way tables</p>
+  </header>
+  <nav class="page-tabs" aria-label="Page navigation"><div class="page-tabs__inner"><a href="../index.html">Home</a><a href="index.html" aria-current="page">Theme 3 Homework</a></div></nav>
+  <main class="chapter-page">
+<section class="solution-index">
+<h2>Questions</h2>
+<nav aria-label="Question index"><a href="#q1">Question 1</a><a href="#q2">Question 2</a><a href="#q3">Question 3</a><a href="#q4">Question 4</a><a href="#q5">Question 5</a><a href="#q6">Question 6</a><a href="#q7">Question 7</a><a href="#q8">Question 8</a><a href="#q9">Question 9</a><a href="#q10">Question 10</a></nav>
+<div class="actions"><button type="button" data-expand>Show all solutions</button><button type="button" data-collapse>Hide all solutions</button></div>
+<p class="downloads"><a href="STC%20122%20Theme%203%20Homework%20-%20Two%20Proportions%20and%20Chi-Square%20-%20Swift%20Tuition%20(2026).pdf">Download the question paper (PDF)</a></p>
+<p class="course-access">Try each question on paper first.</p>
+</section>
+<details class="solution" id="q1">
+<summary>Question 1. Shuttle bus use: one proportion and the direction of the test</summary>
+<div class="answer">
+<div class="question-text">
+
+<p>A university transport office says that <strong>more than 35%</strong> of its students use the campus shuttle bus at least once a week. In a random sample of 400 students, 152 said that they use the shuttle bus at least once a week.</p>
+<pre><code class="language-r">n &lt;- 400
+yes &lt;- 152
+p0 &lt;- 0.35
+(phat &lt;- yes / n)
+(se_p0 &lt;- sqrt(p0 * (1 - p0) / n))
+(z &lt;- (phat - p0) / se_p0)
+pnorm(z)
+pnorm(z, lower.tail = FALSE)
+2 * pnorm(z, lower.tail = FALSE)</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>[1] 0.38
+[1] 0.02384848
+[1] 1.257942
+[1] 0.8957936
+[1] 0.1042064
+[1] 0.2084128</code></pre>
+
+<p>(a) Define $p$. (b) Hypotheses. (c) Success-failure check. (d) Confirm <code>se_p0</code> and <code>z</code>. (e) Match the last three lines to $H_A\colon p\lt 0.35$, $H_A\colon p\gt 0.35$, $H_A\colon p\neq 0.35$. (f) Decision and conclusion at 5%.</p>
+
+</div>
+
+<h3>(a) The parameter</h3>
+<p>$p$ is the true proportion of <em>all</em> students at this university who use the campus shuttle bus at least once a week. The value 152/400 describes only the sample, so it is the statistic $\hat p$, not $p$.</p>
+
+<h3>(b) Hypotheses</h3>
+<p>The claim says "more than 35%", so the alternative points to the right:</p>
+$$H_0\colon p = 0.35 \qquad H_A\colon p \gt 0.35$$
+<p>The null hypothesis always has the equals sign. The claim goes into $H_A$.</p>
+
+<h3>(c) Success-failure condition</h3>
+<p>A hypothesis test is worked out as if $H_0$ is true, so the check uses the null value $p_0 = 0.35$, not $\hat p$:</p>
+$$np_0 = 400 \times 0.35 = 140 \ge 10$$
+$$n(1-p_0) = 400 \times 0.65 = 260 \ge 10$$
+<p>Both expected counts are at least 10. The students were chosen at random, so their answers are independent. The normal model can be used.</p>
+
+<h3>(d) Standard error and test statistic by hand</h3>
+<p>The sample proportion is $\hat p = \dfrac{152}{400} = 0.38$ (output line 1). The standard error uses $p_0$, for the same reason as in part (c):</p>
+$$SE = \sqrt{\frac{p_0(1-p_0)}{n}}$$
+$$= \sqrt{\frac{0.35 \times 0.65}{400}}$$
+$$= \sqrt{0.00056875}$$
+$$= 0.0238$$
+$$z = \frac{\hat p - p_0}{SE} = \frac{0.38 - 0.35}{0.023848} = 1.2579$$
+<p>These match output lines 2 and 3 (0.02384848 and 1.257942).</p>
+
+<h3>(e) Which output line goes with which alternative</h3>
+<ul>
+<li><code>pnorm(z)</code> gives 0.8958, the area to the <strong>left</strong> of 1.2579. This is the p-value for $H_A\colon p \lt 0.35$. It is large because the sample (0.38) lies on the opposite side of 0.35 from that alternative.</li>
+<li><code>pnorm(z, lower.tail = FALSE)</code> gives 0.1042, the area to the <strong>right</strong> of 1.2579. This is the p-value for $H_A\colon p \gt 0.35$, the office's claim.</li>
+<li><code>2 * pnorm(z, lower.tail = FALSE)</code> gives 0.2084, both tails added. This is the p-value for $H_A\colon p \neq 0.35$.</li>
+</ul>
+
+<h3>(f) Decision and conclusion</h3>
+<p>The p-value for this test is 0.1042. Because $0.1042 \gt 0.05$: <strong>do not reject $H_0$</strong>. There is not sufficient evidence that more than 35% of the students use the campus shuttle bus at least once a week.</p>
+<p>This does not prove that $p = 0.35$. The sample proportion 0.38 is above 0.35, but a difference this size happens often enough by chance (about 10% of samples) when $p = 0.35$.</p>
+
+</div>
+</details>
+
+<details class="solution" id="q2">
+<summary>Question 2. SMS reminders and on-time homework: confidence interval for a difference in proportions</summary>
+<div class="answer">
+<div class="question-text">
+
+<p>A mathematics department randomly assigned 430 first-year students to two groups. Group 1 (220 students) received a weekly SMS reminder about homework deadlines; group 2 (210 students) did not. 154 students in group 1 and 126 in group 2 submitted all homework on time. $p_1$ and $p_2$ are the true on-time proportions with and without the reminder. The code had three blanks:</p>
+<pre><code class="language-r">n1 &lt;- 220
+yes1 &lt;- 154
+n2 &lt;- 210
+yes2 &lt;- 126
+(p1hat &lt;- yes1 / n1)
+(p2hat &lt;- yes2 / n2)
+(diff_p &lt;- p1hat - p2hat)
+alpha &lt;- 0.05
+(se &lt;- sqrt(p1hat * (1 - p1hat) / n1 + ______(A)______))
+(zvalue &lt;- qnorm(______(B)______))
+(lower &lt;- diff_p - zvalue * se)
+(upper &lt;- ______(C)______)</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>[1] 0.7
+[1] 0.6
+[1] 0.1
+[1] 0.04579741
+[1] 1.959964
+[1] 0.01023873
+[1] 0.1897613</code></pre>
+
+<p>(a) Parameter and point estimate. (b) Conditions. (c) Blanks A, B, C. (d) SE and 95% interval by hand. (e) Interpret. (f) Change to a 90% interval, using <code>qnorm(0.95)</code> = 1.644854.</p>
+
+</div>
+
+<h3>(a) Parameter and point estimate</h3>
+<p>The parameter is $p_1 - p_2$: the difference between the true proportion of students who submit all homework on time <em>with</em> the SMS reminder and the true proportion <em>without</em> it.</p>
+<p>The point estimate (statistic) is $\hat p_1 - \hat p_2$:</p>
+$$\hat p_1 = \frac{154}{220} = 0.7$$
+$$\hat p_2 = \frac{126}{210} = 0.6$$
+$$\hat p_1 - \hat p_2 = 0.7 - 0.6 = 0.1$$
+<p>These are output lines 1 to 3.</p>
+
+<h3>(b) Conditions for the normal model</h3>
+<ol>
+<li><strong>Independence within and between the groups.</strong> The students were randomly assigned to the groups, and each student is in only one group, so the outcomes are independent.</li>
+<li><strong>Success-failure condition.</strong> A confidence interval does not assume any null value, so the check uses the observed counts:
+<ul>
+<li>Group 1: 154 successes (on time) and $220 - 154 = 66$ failures.</li>
+<li>Group 2: 126 successes and $210 - 126 = 84$ failures.</li>
+</ul>
+All four counts are at least 10.</li>
+</ol>
+<p>Both conditions hold, so $\hat p_1 - \hat p_2$ is close to normally distributed.</p>
+
+<h3>(c) Missing code</h3>
+<ul>
+<li>(A) <code>p2hat * (1 - p2hat) / n2</code>. This is the second term of the unpooled standard error.</li>
+<li>(B) <code>1 - alpha / 2</code>. For 95% confidence, 2.5% is left in each tail, so the critical value is the 97.5th percentile, <code>qnorm(0.975)</code> = 1.959964 (output line 5).</li>
+<li>(C) <code>diff_p + zvalue * se</code>. The upper limit adds the margin of error.</li>
+</ul>
+
+<h3>(d) Standard error and 95% interval by hand</h3>
+<p>For a confidence interval, use the unpooled standard error from the formula sheet:</p>
+$$SE(\hat p_1-\hat p_2)=\sqrt{\frac{0.7(1-0.7)}{220}+\frac{0.6(1-0.6)}{210}}$$
+$$= \sqrt{0.00095455 + 0.00114286}$$
+$$= \sqrt{0.00209740}$$
+$$= 0.0458$$
+<p>Margin of error: $1.96 \times 0.045797 = 0.0898$.</p>
+$$0.1 \pm 0.0898 \quad\Longrightarrow\quad (0.0102,\ 0.1898)$$
+<p>R gives (0.01023873, 0.1897613). The fourth decimal agrees; the tiny difference comes from R using $z^\star = 1.959964$ instead of 1.96.</p>
+
+<h3>(e) Interpretation</h3>
+<p>With 95% confidence, the true proportion of students who submit all homework on time is between 0.0102 and 0.1898 higher with the SMS reminder than without it (between about 1 and 19 percentage points higher).</p>
+<p>The whole interval is above 0, so the data point to a higher on-time proportion with the reminder.</p>
+
+<h3>(f) A 90% interval</h3>
+<p>Change <code>alpha &lt;- 0.05</code> to <code>alpha &lt;- 0.10</code>. Then <code>qnorm(1 - alpha / 2)</code> becomes <code>qnorm(0.95)</code> = 1.644854. Nothing else changes, because the estimate and the standard error do not depend on the confidence level.</p>
+$$\text{Margin of error} = 1.644854 \times 0.045797 = 0.0753$$
+$$0.1 \pm 0.0753 \quad\Longrightarrow\quad (0.0247,\ 0.1753)$$
+<p>The 90% interval is <strong>narrower</strong> than the 95% interval. A lower confidence level uses a smaller critical value (1.645 instead of 1.96), so the margin of error is smaller. The price is less confidence that the interval contains $p_1 - p_2$.</p>
+
+</div>
+</details>
+
+<details class="solution" id="q3">
+<summary>Question 3. Breakfast habits: pooled z test for a zero difference</summary>
+<div class="answer">
+<div class="question-text">
+
+<p>Independent random samples: 117 of 180 residence students and 132 of 240 day students eat breakfast on most weekdays. The team claims that <strong>residence students are more likely</strong> to eat breakfast. $p_1$: residence students, $p_2$: day students.</p>
+<pre><code class="language-r">yes1 &lt;- 117
+n1 &lt;- 180
+yes2 &lt;- 132
+n2 &lt;- 240
+(p1hat &lt;- yes1 / n1)
+(p2hat &lt;- yes2 / n2)
+(pooled &lt;- (yes1 + yes2) / (n1 + n2))
+(se_pool &lt;- sqrt(pooled * (1 - pooled) * (1 / n1 + 1 / n2)))
+(z &lt;- ((p1hat - p2hat) - 0) / se_pool)
+pnorm(z)
+pnorm(z, lower.tail = FALSE)
+2 * pnorm(z, lower.tail = FALSE)</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>[1] 0.65
+[1] 0.55
+[1] 0.5928571
+[1] 0.04844302
+[1] 2.064281
+[1] 0.9805045
+[1] 0.01949555
+[1] 0.03899109</code></pre>
+
+<p>(a) Hypotheses. (b) Why pooled. (c) Show $\hat p_{\text{pool}} = 0.5929$. (d) Conditions. (e) Confirm SE and $z$. (f) Which line is the p-value. (g) Multiple choice. (h) Causation?</p>
+<p>Options for (g): <strong>A.</strong> Reject $H_0$; sufficient evidence that the proportion of residence students who eat breakfast is higher than that of day students. <strong>B.</strong> Reject $H_0$; the data prove that living in residence causes students to eat breakfast. <strong>C.</strong> Do not reject $H_0$; not sufficient evidence. <strong>D.</strong> Reject $H_0$; sufficient evidence that $\hat p_1 \gt \hat p_2$.</p>
+
+</div>
+
+<h3>(a) Hypotheses</h3>
+$$H_0\colon p_1 - p_2 = 0 \qquad H_A\colon p_1 - p_2 \gt 0$$
+<p>"Residence students are more likely" means $p_1 \gt p_2$, which is the same as $p_1 - p_2 \gt 0$.</p>
+
+<h3>(b) Why a pooled proportion</h3>
+<p>The test is worked out as if $H_0$ is true. Here $H_0$ says $p_1 = p_2$, so both groups share one common proportion. One common proportion is estimated from both samples together: that estimate is the pooled proportion. The pooled standard error is used only when the null value of the difference is 0.</p>
+
+<h3>(c) The pooled proportion</h3>
+$$\hat p_{\text{pool}}=\frac{\hat p_1 n_1+\hat p_2 n_2}{n_1+n_2}$$
+$$= \frac{0.65 \times 180 + 0.55 \times 240}{180 + 240}$$
+$$= \frac{117 + 132}{420}$$
+$$= \frac{249}{420}$$
+$$= 0.5929$$
+<p>$\hat p_1 n_1$ is the number of successes in sample 1 (117), which is why the R code writes <code>(yes1 + yes2) / (n1 + n2)</code>. Output line 3 shows 0.5928571.</p>
+
+<h3>(d) Conditions</h3>
+<ol>
+<li><strong>Independence:</strong> two independent random samples, so the students' answers are independent within and between the groups.</li>
+<li><strong>Success-failure with the pooled proportion</strong> (because the test assumes $H_0$):
+$$n_1\hat p_{\text{pool}} = 180 \times \frac{249}{420} = 106.71$$
+$$n_1(1-\hat p_{\text{pool}}) = 180 \times \frac{171}{420} = 73.29$$
+$$n_2\hat p_{\text{pool}} = 240 \times \frac{249}{420} = 142.29$$
+$$n_2(1-\hat p_{\text{pool}}) = 240 \times \frac{171}{420} = 97.71$$
+All four are at least 10. (The exact fraction $\frac{249}{420}$ is used here; with the rounded 0.5929 the products differ only in the second decimal.)</li>
+</ol>
+<p>The normal model can be used.</p>
+
+<h3>(e) Standard error and test statistic by hand</h3>
+$$SE(\hat p_{\text{pool}})=\sqrt{0.5929(1-0.5929)\left(\frac{1}{180}+\frac{1}{240}\right)}$$
+$$= \sqrt{0.241378 \times 0.009722}$$
+$$= \sqrt{0.0023467}$$
+$$= 0.0484$$
+$$z = \frac{(\hat p_1 - \hat p_2) - 0}{SE}$$
+$$= \frac{0.65 - 0.55}{0.048443}$$
+$$= 2.0643$$
+<p>These match output lines 4 and 5 (0.04844302 and 2.064281).</p>
+
+<h3>(f) The p-value</h3>
+<p>$H_A$ says "greater than", so the p-value is the area to the <strong>right</strong> of $z = 2.0643$: <code>pnorm(z, lower.tail = FALSE)</code> = <strong>0.0195</strong> (output line 7).</p>
+<ul>
+<li>0.9805 (<code>pnorm(z)</code>) is the left-tail area, used for $H_A\colon p_1 - p_2 \lt 0$.</li>
+<li>0.0390 (two times the right tail) is used for $H_A\colon p_1 - p_2 \neq 0$.</li>
+</ul>
+
+<h3>(g) Decision and conclusion: option A</h3>
+<p>$0.0195 \lt 0.05$, so reject $H_0$. <strong>A</strong> is correct: there is sufficient evidence that the proportion of residence students who eat breakfast on most weekdays is higher than that of day students.</p>
+<ul>
+<li><strong>B</strong> is wrong: a test never proves anything, and these are observational samples, so they cannot show cause.</li>
+<li><strong>C</strong> has the wrong decision: the p-value is smaller than 0.05.</li>
+<li><strong>D</strong> is about the sample proportions. It is already known that $\hat p_1 = 0.65 \gt \hat p_2 = 0.55$; the test is about the population proportions $p_1$ and $p_2$.</li>
+</ul>
+
+<h3>(h) Causation</h3>
+<p>No. The students were sampled, not randomly assigned to live in residence. Residence students and day students can differ in other ways that affect breakfast, for example access to a dining hall or the time spent travelling to campus. The data show an association between where students live and eating breakfast, not that living in residence causes it.</p>
+
+</div>
+</details>
+
+<details class="solution" id="q4">
+<summary>Question 4. Correcting R code: testing a non-zero difference</summary>
+<div class="answer">
+<div class="question-text">
+
+<p>SMS data from Question 2 (154 of 220 versus 126 of 210 on time). Claim: the reminder raises the on-time proportion by <strong>exactly 15 percentage points</strong>; two-sided alternative. The tutor's code (objects from Question 2 already exist):</p>
+<pre><code class="language-r">p0 &lt;- 0.15
+(pooled &lt;- (yes1 + yes2) / (n1 + n2))
+(se_pool &lt;- sqrt(pooled * (1 - pooled) * (1 / n1 + 1 / n2)))
+(z &lt;- (diff_p - p0) / se_pool)
+(pvalue &lt;- pnorm(z, lower.tail = FALSE))</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>[1] 0.6511628
+[1] 0.04598005
+[1] -1.087428
+[1] 0.8615762</code></pre>
+
+<p>(a) Hypotheses. (b) Two mistakes. (c) Corrected code. (d) $z$ by hand and p-value, using <code>pnorm(1.0918, lower.tail = FALSE)</code> = 0.1374605. (e) Decision. (f) Link with the 95% interval from Question 2.</p>
+
+</div>
+
+<h3>(a) Hypotheses</h3>
+$$H_0\colon p_1 - p_2 = 0.15 \qquad H_A\colon p_1 - p_2 \neq 0.15$$
+
+<h3>(b) The two mistakes</h3>
+<ol>
+<li><strong>The standard error is pooled.</strong> Pooling is correct only when $H_0$ says $p_1 - p_2 = 0$, because then the two groups share one proportion. Here $H_0$ says the proportions differ by 0.15, so there is no common proportion to estimate. The test must use the unpooled standard error $SE(\hat p_1 - \hat p_2)$, the same one as in the confidence interval.</li>
+<li><strong>The p-value uses only the right tail.</strong> $H_A$ is two-sided, so use both tails: <code>2 * pnorm(z)</code> for a negative $z$. Here $z = -1.09$, so <code>pnorm(z, lower.tail = FALSE)</code> gives the large area to the right of $-1.09$ (0.8616), which is not a p-value for this test.</li>
+</ol>
+
+<h3>(c) Corrected code</h3>
+<pre><code class="language-r">p0 &lt;- 0.15
+(se &lt;- sqrt(p1hat * (1 - p1hat) / n1 + p2hat * (1 - p2hat) / n2))
+(z &lt;- (diff_p - p0) / se)
+(pvalue &lt;- 2 * pnorm(z))</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>[1] 0.04579741
+[1] -1.091765
+[1] 0.2749365</code></pre>
+
+<p>(<code>2 * pnorm(abs(z), lower.tail = FALSE)</code> gives the same value and works for either sign of $z$.)</p>
+
+<h3>(d) Test statistic and p-value by hand</h3>
+<p>From Question 2, $\hat p_1 - \hat p_2 = 0.1$ and $SE = 0.045797$.</p>
+$$z = \frac{(\hat p_1 - \hat p_2) - 0.15}{SE}$$
+$$= \frac{0.1 - 0.15}{0.045797}$$
+$$= -1.0918$$
+<p>The normal curve is symmetric, so the area to the left of $-1.0918$ equals the area to the right of $+1.0918$, which R gives as 0.1374605. Two tails:</p>
+$$\text{p-value} = 2 \times 0.1374605 = 0.2749$$
+<p>This agrees with the corrected R output (0.2749365).</p>
+
+<h3>(e) Decision and conclusion</h3>
+<p>$0.2749 \gt 0.05$: <strong>do not reject $H_0$</strong>. There is not sufficient evidence that the difference between the on-time proportions (reminder minus no reminder) is different from 0.15. The data are consistent with the department head's claim; they do not prove it.</p>
+
+<h3>(f) The same decision from the confidence interval</h3>
+<p>The 95% interval from Question 2 is $(0.0102,\ 0.1898)$. The null value 0.15 lies <strong>inside</strong> it, so 0.15 is a plausible value of $p_1 - p_2$. A two-sided test at the 5% level therefore does not reject $H_0\colon p_1 - p_2 = 0.15$. Both methods use the same unpooled standard error, which is why they agree.</p>
+
+</div>
+</details>
+
+<details class="solution" id="q5">
+<summary>Question 5. Peer mentoring: bootstrap percentile confidence interval</summary>
+<div class="answer">
+<div class="question-text">
+
+<p>Students chose whether to join a mentoring pilot. 45 of 60 who joined passed their first test; 30 of 50 who did not join passed. $p_1$: joiners, $p_2$: non-joiners.</p>
+<pre><code class="language-r">n1 &lt;- 60
+yes1 &lt;- 45
+no1 &lt;- n1 - yes1
+n2 &lt;- 50
+yes2 &lt;- 30
+no2 &lt;- n2 - yes2
+outcomes_m &lt;- c(rep(c(1, 0), c(yes1, no1)))
+outcomes_n &lt;- c(rep(c(1, 0), c(yes2, no2)))
+nsim &lt;- 10000
+set.seed(122)
+sim_m &lt;- matrix(NA, nrow = n1, ncol = nsim)
+sim_n &lt;- matrix(NA, nrow = n2, ncol = nsim)
+for(i in 1:nsim){
+  sim_m[,i] = sample(outcomes_m, n1, replace = ____(A)____)
+  sim_n[,i] = sample(outcomes_n, n2, replace = ____(A)____)
+}
+sim_diff &lt;- apply(sim_m, 2, mean) - apply(sim_n, 2, mean)
+alpha &lt;- 0.10
+(lower &lt;- quantile(sim_diff, ____(B)____))
+(upper &lt;- quantile(sim_diff, ____(C)____))</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>         5% 
+0.003333333 
+      95% 
+0.2966667 </code></pre>
+
+<p>(a) Describe <code>outcomes_m</code>. (b) Blank A. (c) Blanks B, C and the confidence level. (d) A column of <code>sim_m</code>; a value of <code>sim_diff</code>. (e) State and interpret the interval. (f) Compare with the mathematical-model interval (0.0036, 0.2964); another seed? (g) "Mentoring causes higher pass rates."</p>
+
+</div>
+
+<h3>(a) The vector <code>outcomes_m</code></h3>
+<p><code>rep(c(1, 0), c(45, 15))</code> repeats 1 forty-five times and 0 fifteen times. So <code>outcomes_m</code> holds 60 values, one per mentored student: <strong>1 = passed</strong> the first test and <strong>0 = did not pass</strong>. Its mean is $\frac{45}{60} = 0.75 = \hat p_1$.</p>
+
+<h3>(b) Blank (A): <code>TRUE</code></h3>
+<p>A bootstrap resample takes 60 students from the original 60 <strong>with replacement</strong>: some students are picked more than once and some not at all. This copies the idea of drawing a new sample from the population, so the resampled proportions vary the way sample proportions vary. With <code>replace = FALSE</code>, every resample would contain the same 45 ones and 15 zeros, every proportion would be 0.75, and there would be no variability to measure.</p>
+
+<h3>(c) Blanks (B) and (C)</h3>
+<ul>
+<li>(B) <code>alpha / 2</code>, which is 0.05: the 5th percentile.</li>
+<li>(C) <code>1 - alpha / 2</code>, which is 0.95: the 95th percentile.</li>
+</ul>
+<p>The middle 90% of the bootstrap differences lie between these percentiles, so this is a <strong>90%</strong> bootstrap percentile interval. The output labels <code>5%</code> and <code>95%</code> are the percentile names that <code>quantile</code> prints.</p>
+
+<h3>(d) What the simulated objects represent</h3>
+<ul>
+<li>One column of <code>sim_m</code> is one bootstrap resample of 60 mentored students (60 ones and zeros). <code>apply(sim_m, 2, mean)</code> turns each column into one bootstrap pass proportion $\hat p_1^{*}$.</li>
+<li>One value of <code>sim_diff</code> is one bootstrap difference $\hat p_1^{*} - \hat p_2^{*}$, from one resample of each group. There are 10&nbsp;000 such differences.</li>
+</ul>
+
+<h3>(e) The interval and its meaning</h3>
+<p>Rounded to 4 decimals, the 90% bootstrap percentile interval is $(0.0033,\ 0.2967)$.</p>
+<p>With 90% confidence, the true pass proportion of students who join mentoring is between 0.0033 and 0.2967 higher than that of students who do not join (about 0.3 to 29.7 percentage points higher). The value 0 lies just outside the interval, so at the 10% level the data suggest a higher pass proportion among students who join.</p>
+
+<h3>(f) Comparison with the mathematical model</h3>
+<p>The mathematical model: $\hat p_1 - \hat p_2 = 0.75 - 0.60 = 0.15$ and</p>
+$$SE = \sqrt{\frac{0.75(0.25)}{60}+\frac{0.6(0.4)}{50}}$$
+$$= \sqrt{0.003125 + 0.0048}$$
+$$= 0.0890$$
+$$0.15 \pm 1.645(0.0890) = (0.0036,\ 0.2964)$$
+<p>Its conditions hold (the counts 45, 15, 30 and 20 are all at least 10). The two intervals are almost the same: both are centred near 0.15 and have nearly the same width, and both only just exclude 0.</p>
+<p>With a different seed, the bootstrap limits would change slightly, because the resamples are random. <code>set.seed(122)</code> fixes the random numbers so that the same output appears each time the code is run. The mathematical-model interval has no randomness, so it never changes.</p>
+
+<h3>(g) "Mentoring causes higher pass rates"</h3>
+<p>This claim is not justified. Students chose for themselves whether to join, so this is an observational study. Students who join may differ from those who do not, for example in motivation, and that could explain part of the difference. The interval shows an association between joining and passing, not cause. The lower limit (0.0033) is also close to 0, so the evidence for a difference is weak.</p>
+
+</div>
+</details>
+
+<details class="solution" id="q6">
+<summary>Question 6. Data vouchers and survey completion: randomisation test</summary>
+<div class="answer">
+<div class="question-text">
+
+<p>90 students were randomly assigned to two groups of 45. Group 1 was offered a free mobile data voucher for completing a course evaluation survey; 30 completed it. In group 2 (no voucher), 21 completed it. Does the voucher <strong>increase</strong> the completion proportion? $p_1$: with voucher, $p_2$: without.</p>
+<pre><code class="language-r">n1 &lt;- 45
+yes1 &lt;- 30
+n2 &lt;- 45
+yes2 &lt;- 21
+(diff_p &lt;- yes1 / n1 - yes2 / n2)
+outcomes &lt;- c(rep(c(1, 0), c(yes1 + yes2, n1 + n2 - yes1 - yes2)))
+nsim &lt;- 10000
+set.seed(35)
+sim &lt;- matrix(NA, nrow = n1 + n2, ncol = nsim)
+for(i in 1:nsim){
+  sim[,i] = sample(outcomes, n1 + n2, replace = FALSE)
+}
+sim_diff &lt;- apply(sim[1:n1,], 2, mean) -
+            apply(sim[(n1+1):(n1+n2),], 2, mean)
+(pvalue &lt;- sum(sim_diff &gt;= diff_p) / nsim)</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>[1] 0.2
+[1] 0.0422</code></pre>
+
+<figure><img class="uml" src="figures/q6_null.svg" alt="Histogram of 10 000 simulated differences in proportions, centred at 0 and ranging from about -0.3 to 0.3, with a vertical line at the observed difference 0.2 in the right tail."><figcaption>The 10&nbsp;000 values in <code>sim_diff</code>. The vertical line marks the observed difference 0.2.</figcaption></figure>
+<p>(a) Hypotheses. (b) The vector <code>outcomes</code>. (c) <code>replace = FALSE</code> here versus <code>TRUE</code> in Question 5. (d) Rows of a column of <code>sim</code>. (e) Meaning of 0.0422. (f) Decision; may "causes" be used? (g) Code for $H_A\colon p_1 - p_2 \lt 0$. (h) Centre of the histogram.</p>
+
+</div>
+
+<h3>(a) Hypotheses</h3>
+$$H_0\colon p_1 - p_2 = 0 \ \text{(the voucher has no effect)}$$
+$$H_A\colon p_1 - p_2 \gt 0 \ \text{(the voucher increases completion)}$$
+
+<h3>(b) The vector <code>outcomes</code></h3>
+<p><code>outcomes</code> holds 90 values: $30 + 21 = 51$ ones (completed the survey) and $90 - 51 = 39$ zeros (did not complete). The group labels are dropped.</p>
+<p>If $H_0$ is true, the voucher makes no difference, so each student would have given the same outcome in either group. The group labels then carry no information, and the 90 outcomes can be dealt out again into two new groups of 45. Doing this many times shows what differences happen by chance alone.</p>
+
+<h3>(c) <code>replace = FALSE</code> here, <code>replace = TRUE</code> in Question 5</h3>
+<ul>
+<li><strong>Randomisation test (here):</strong> the code copies the random assignment. Each of the 90 actual students is placed in exactly one group, so each outcome is used exactly once: sampling <strong>without</strong> replacement, which is a shuffle. Every simulated split still has 51 completions in total.</li>
+<li><strong>Bootstrap (Question 5):</strong> the code copies drawing new samples from the population, without assuming $H_0$. Drawing <strong>with</strong> replacement lets the proportions vary from resample to resample.</li>
+</ul>
+
+<h3>(d) Rows of one column of <code>sim</code></h3>
+<p>Each column is one shuffle of the 90 outcomes. Rows <code>1:n1</code> (rows 1 to 45) form the simulated voucher group; rows <code>(n1+1):(n1+n2)</code> (rows 46 to 90) form the simulated no-voucher group. <code>sim_diff</code> holds the difference in their completion proportions for each shuffle.</p>
+
+<h3>(e) What 0.0422 measures</h3>
+<p><code>sum(sim_diff &gt;= diff_p) / nsim</code> counts the simulated differences that are 0.2 or larger and divides by 10&nbsp;000. So 422 of the 10&nbsp;000 shuffles gave a difference of at least 0.2: these are the bars on and to the right of the vertical line.</p>
+<p>In words: if the voucher had no effect, random assignment alone would give a difference of 0.2 or more in about 4.2% of repetitions. This is the p-value.</p>
+
+<h3>(f) Decision, conclusion and cause</h3>
+<p>$0.0422 \lt 0.05$: <strong>reject $H_0$</strong>. There is sufficient evidence that offering the data voucher increases the proportion of students who complete the course evaluation survey.</p>
+<p>The word "causes" may be used here, because the students were <strong>randomly assigned</strong> to the groups. Random assignment makes the groups alike in other ways, so the voucher is the only planned difference between them. The result applies to students like those in the study.</p>
+
+<h3>(g) Code for $H_A\colon p_1 - p_2 \lt 0$</h3>
+<pre><code class="language-r">(pvalue &lt;- sum(sim_diff &lt;= diff_p) / nsim)</code></pre>
+<p>For a "less than" alternative, the p-value counts simulated differences at or <em>below</em> the observed difference.</p>
+
+<h3>(h) The centre of the histogram</h3>
+<p>The histogram is centred near <strong>0</strong>. Every shuffle puts the outcomes into the two groups at random, so neither simulated group is favoured. The simulated differences therefore vary around 0, which is the value stated in $H_0$. The observed 0.2 lies far out in the right tail, which is why the p-value is small.</p>
+
+</div>
+</details>
+
+<details class="solution" id="q7">
+<summary>Question 7. The chi-square distribution: shape, probabilities and percentiles</summary>
+<div class="answer">
+<div class="question-text">
+
+<figure><img class="uml" src="figures/q7_curves.svg" alt="Three chi-square density curves. Curve A starts high at 0 and falls; curve B peaks near 2; curve C peaks near 6 and is the most spread out."><figcaption>Curves A, B and C have 2, 4 and 8 degrees of freedom, in some order.</figcaption></figure>
+<pre><code class="language-r">pchisq(6.2, df = 3)                     # line 1
+pchisq(6.2, df = 3, lower.tail = FALSE) # line 2
+qchisq(0.95, df = 6)                    # line 3
+qchisq(0.05, df = 6)                    # line 4
+pchisq(8, df = 4) - pchisq(2, df = 4)   # line 5
+qchisq(0.90, df = 2)                    # line 6</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>[1] 0.897725
+[1] 0.102275
+[1] 12.59159
+[1] 1.635383
+[1] 0.6441807
+[1] 4.60517</code></pre>
+
+<p>(a) Match curves to df. (b) Mean and variance for df 8. (c) Probability statements for lines 1, 2, 5. (d) Critical value for $\alpha = 0.05$, df 6. (e) Missing argument in <code>qchisq(0.05, df = 6, ____)</code>. (f) Meaning of 4.60517. (g) True or false: (i) a chi-square statistic can be negative; (ii) the p-value of a test of independence is an upper-tail area.</p>
+
+</div>
+
+<h3>(a) Matching the curves</h3>
+<p>The mean of a chi-square distribution equals its degrees of freedom $k$. A larger $k$ moves the centre to the right and spreads the curve out, and the curve becomes less skewed.</p>
+<ul>
+<li><strong>A: df = 2</strong> (highest at 0 and falling, centre near 2).</li>
+<li><strong>B: df = 4</strong> (peak near 2, centre near 4).</li>
+<li><strong>C: df = 8</strong> (peak near 6, centre near 8, widest spread).</li>
+</ul>
+
+<h3>(b) Mean and variance for 8 degrees of freedom</h3>
+$$\mu = k = 8 \qquad \sigma^2 = 2k = 16$$
+
+<h3>(c) Probability statements</h3>
+<ul>
+<li>Line 1: $P(X^2 \le 6.2) = 0.8977$ for $X^2 \sim \chi^2(3)$. <code>pchisq</code> gives the area to the left.</li>
+<li>Line 2: $P(X^2 \gt 6.2) = 0.1023$ for $X^2 \sim \chi^2(3)$. Check: $0.897725 + 0.102275 = 1$.</li>
+<li>Line 5: $P(2 \le X^2 \le 8) = 0.6442$ for $X^2 \sim \chi^2(4)$: the area left of 8 minus the area left of 2.</li>
+</ul>
+
+<h3>(d) The critical value</h3>
+<p><strong>Line 3</strong>: 12.5916. It cuts off 5% in the <em>right</em> tail, $P(X^2 \ge 12.5916) = 0.05$, so $H_0$ is rejected when $X^2 \ge 12.5916$.</p>
+<p>Line 4 (1.6354) cuts off 5% in the <em>left</em> tail. A small $X^2$ means the observed counts are close to the expected counts, which agrees with $H_0$. The chi-square test rejects only for large values, so line 4 is not a critical value.</p>
+
+<h3>(e) The missing argument</h3>
+<p><code>qchisq(0.05, df = 6, lower.tail = FALSE)</code> gives 12.59159: the value with 5% above it is the same as the 95th percentile.</p>
+
+<h3>(f) The value 4.60517</h3>
+<p>4.60517 is the <strong>90th percentile</strong> of the chi-square distribution with 2 degrees of freedom: $P(X^2 \le 4.60517) = 0.90$, so 10% of the area lies above it. It is also the critical value of a test with $df = 2$ at the 10% level.</p>
+
+<h3>(g) True or false</h3>
+<ol>
+<li><strong>False.</strong> $X^2$ adds terms $\frac{(O-E)^2}{E}$. Each square is 0 or positive and each expected count is positive, so $X^2 \ge 0$.</li>
+<li><strong>True.</strong> Differences between observed and expected counts in either direction are squared, so every kind of difference makes $X^2$ larger. Only large values are evidence against independence, so the p-value is always the area to the right of the observed $X^2$.</li>
+</ol>
+
+</div>
+</details>
+
+<details class="solution" id="q8">
+<summary>Question 8. Study space and year of study: chi-square test by hand</summary>
+<div class="answer">
+<div class="question-text">
+
+<p>A random sample of 300 students was asked where they usually study.</p>
+
+<table class="trace">
+<tr><th>Observed</th><th>Library</th><th>Own room</th><th>Other</th><th>Total</th></tr>
+<tr><td>First-year</td><td>58</td><td>70</td><td>32</td><td>160</td></tr>
+<tr><td>Senior</td><td>32</td><td>82</td><td>26</td><td>140</td></tr>
+<tr><td><strong>Total</strong></td><td>90</td><td>152</td><td>58</td><td>300</td></tr>
+</table>
+<table class="trace">
+<tr><th>Expected (given)</th><th>Library</th><th>Own room</th><th>Other</th></tr>
+<tr><td>First-year</td><td>48</td><td>____</td><td>30.9333</td></tr>
+<tr><td>Senior</td><td>____</td><td>70.9333</td><td>____</td></tr>
+</table>
+
+<p>(a) Hypotheses. (b) Missing expected counts. (c) Conditions. (d) The test statistic with each contribution. (e) df. (f) Choose from <code>pchisq(7.78, df = 1)</code> = 0.9947172, <code>pchisq(7.78, df = 2)</code> = 0.9795547, <code>pchisq(7.78, df = 6)</code> = 0.7453317 and find the p-value. (g) Multiple choice. (h) The largest contributions and the pattern.</p>
+<p>Options for (g): <strong>A.</strong> Reject $H_0$; sufficient evidence that year of study and usual study space are associated (dependent). <strong>B.</strong> Reject $H_0$; being a senior causes students to study in their own room. <strong>C.</strong> Do not reject $H_0$; they have been proved independent. <strong>D.</strong> Do not reject $H_0$; not sufficient evidence of an association.</p>
+
+</div>
+
+<h3>(a) Hypotheses</h3>
+<p>$H_0$: year of study and usual study space are independent (not associated).<br>
+$H_A$: year of study and usual study space are dependent (associated).</p>
+
+<h3>(b) Missing expected counts</h3>
+$$E_{ij}=\frac{(\text{row } i \text{ total})\times(\text{column } j \text{ total})}{\text{table total}}$$
+<ul>
+<li>First-year, Own room: $\dfrac{160 \times 152}{300} = 81.0667$</li>
+<li>Senior, Library: $\dfrac{140 \times 90}{300} = 42$</li>
+<li>Senior, Other: $\dfrac{140 \times 58}{300} = 27.0667$</li>
+</ul>
+<p>Check: each row of expected counts adds to its row total, for example $48 + 81.0667 + 30.9333 = 160$.</p>
+
+<h3>(c) Conditions</h3>
+<ol>
+<li><strong>Independence:</strong> a random sample, and each student is counted in exactly one cell.</li>
+<li><strong>Expected counts at least 5 in every cell:</strong> the smallest expected count is 27.0667, so this holds.</li>
+</ol>
+
+<h3>(d) The test statistic</h3>
+<table class="trace">
+<tr><th>Cell</th><th>$O$</th><th>$E$</th><th>$\frac{(O-E)^2}{E}$</th></tr>
+<tr><td>First-year, Library</td><td>58</td><td>48</td><td>$\frac{100}{48} = 2.0833$</td></tr>
+<tr><td>First-year, Own room</td><td>70</td><td>81.0667</td><td>$\frac{122.4711}{81.0667} = 1.5107$</td></tr>
+<tr><td>First-year, Other</td><td>32</td><td>30.9333</td><td>$\frac{1.1378}{30.9333} = 0.0368$</td></tr>
+<tr><td>Senior, Library</td><td>32</td><td>42</td><td>$\frac{100}{42} = 2.3810$</td></tr>
+<tr><td>Senior, Own room</td><td>82</td><td>70.9333</td><td>$\frac{122.4711}{70.9333} = 1.7266$</td></tr>
+<tr><td>Senior, Other</td><td>26</td><td>27.0667</td><td>$\frac{1.1378}{27.0667} = 0.0420$</td></tr>
+</table>
+$$\chi^2 = 2.0833 + 1.5107 + 0.0368 + 2.3810 + 1.7266 + 0.0420$$
+$$= 7.7804 \approx 7.78$$
+<p>R's <code>chisq.test</code> gives the same value, <code>X-squared = 7.7804</code>.</p>
+
+<h3>(e) Degrees of freedom</h3>
+$$df = (R-1)\times(C-1) = (2-1)\times(3-1) = 2$$
+
+<h3>(f) The p-value</h3>
+<p>Use the line with <code>df = 2</code>. <code>pchisq</code> gives the area to the left, $P(X^2 \le 7.78) = 0.9795547$. The p-value is the area to the right:</p>
+$$\text{p-value} = P(X^2 \ge 7.78) = 1 - 0.9795547 = 0.0204$$
+<figure><img class="uml" src="figures/q8_tail.svg" alt="Chi-square density curve with 2 degrees of freedom; the area to the right of 7.78 is shaded and labelled p-value = 0.0204."><figcaption>The shaded right tail beyond 7.78 is the p-value.</figcaption></figure>
+
+<h3>(g) Decision and conclusion: option A</h3>
+<p>$0.0204 \lt 0.05$, so reject $H_0$. <strong>A</strong> is correct.</p>
+<ul>
+<li><strong>B</strong> claims cause; a survey shows association only.</li>
+<li><strong>C</strong> has the wrong decision, and a test never proves independence.</li>
+<li><strong>D</strong> has the wrong decision: the p-value is below 0.05.</li>
+</ul>
+
+<h3>(h) The largest contributions</h3>
+<p>The two Library cells (2.3810 and 2.0833) and then the two Own room cells (1.7266 and 1.5107) add the most. Compared with what independence predicts:</p>
+<ul>
+<li>more first-years use the library (58 against 48 expected), and fewer seniors do (32 against 42);</li>
+<li>more seniors study in their own room (82 against 70.93), and fewer first-years do (70 against 81.07).</li>
+</ul>
+<p>The "Other" cells are close to their expected counts and add almost nothing.</p>
+
+</div>
+</details>
+
+<details class="solution" id="q9">
+<summary>Question 9. Payment method on three campuses: chisq.test and a randomisation test</summary>
+<div class="answer">
+<div class="question-text">
+
+<p>At food courts on three campuses, 300 student customers were selected at random and their payment method was recorded. Does payment method depend on the campus?</p>
+<pre><code class="language-r">ct &lt;- as.table(rbind(c(30, 60, 60),
+                     c(27, 38, 25),
+                     c(18, 26, 16)))
+dimnames(ct) &lt;- list(Campus = c(&quot;Hatfield&quot;, &quot;Groenkloof&quot;, &quot;Prinshof&quot;),
+                     Payment = c(&quot;Cash&quot;, &quot;Card&quot;, &quot;App&quot;))
+(result &lt;- chisq.test(ct))
+result$expected</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>
+	Pearson&#x27;s Chi-squared test
+
+data:  ct
+X-squared = 6.7272, df = 4, p-value = 0.151
+
+            Payment
+Campus       Cash Card  App
+  Hatfield   37.5 62.0 50.5
+  Groenkloof 22.5 37.2 30.3
+  Prinshof   15.0 24.8 20.2</code></pre>
+
+<pre><code class="language-r">campus &lt;- rep(c(&quot;Hatfield&quot;, &quot;Groenkloof&quot;, &quot;Prinshof&quot;), times = rowSums(ct))
+payment &lt;- rep(rep(c(&quot;Cash&quot;, &quot;Card&quot;, &quot;App&quot;), 3),
+               times = c(30, 60, 60, 27, 38, 25, 18, 26, 16))
+(obs_stat &lt;- chisq.test(table(campus, payment))$statistic)
+nsim &lt;- 5000
+set.seed(18)
+sim_stat &lt;- rep(NA, nsim)
+for(i in 1:nsim){
+  shuffled &lt;- sample(payment, length(payment), replace = FALSE)
+  sim_stat[i] &lt;- chisq.test(table(campus, shuffled))$statistic
+}
+(pvalue &lt;- sum(sim_stat ____ obs_stat) / nsim)</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>X-squared 
+ 6.727244 
+[1] 0.148</code></pre>
+
+<p>(a) Hypotheses. (b) Confirm the Hatfield&ndash;Cash expected count and df. (c) Conditions. (d) Code for observed counts only and the statistic only. (e) Decision. (f) One pass of the loop. (g) The blank. (h) Multiple choice on the p-value 0.151. (i) Why 0.148 and 0.151 agree.</p>
+<p>Options for (h): <strong>A.</strong> There is a 15.1% chance that campus and payment method are independent. <strong>B.</strong> If campus and payment method were independent, a chi-square statistic of 6.7272 or larger would happen in about 15.1% of random samples like this one. <strong>C.</strong> 15.1% of the customers pay in a way that depends on their campus. <strong>D.</strong> The test proves that campus and payment method are independent.</p>
+
+</div>
+
+<h3>(a) Hypotheses</h3>
+<p>$H_0$: campus and payment method are independent.<br>
+$H_A$: campus and payment method are dependent (payment method depends on the campus).</p>
+
+<h3>(b) One expected count and the degrees of freedom</h3>
+<p>Hatfield row total: $30 + 60 + 60 = 150$. Cash column total: $30 + 27 + 18 = 75$. Table total: 300.</p>
+$$E = \frac{150 \times 75}{300} = 37.5$$
+<p>This matches <code>result$expected</code>. The table has 3 rows and 3 columns:</p>
+$$df = (3-1)\times(3-1) = 4,$$
+<p>which matches <code>df = 4</code> in the output.</p>
+
+<h3>(c) Conditions</h3>
+<ol>
+<li><strong>Independence:</strong> customers were selected at random and each customer appears once.</li>
+<li><strong>Expected counts at least 5:</strong> the smallest value in <code>result$expected</code> is 15.0 (Prinshof, Cash). Every cell has at least 5. (R prints the warning "Chi-squared approximation may be incorrect" when expected counts are small; no warning appears here.)</li>
+</ol>
+
+<h3>(d) Printing parts of the result</h3>
+<ul>
+<li>Observed counts only: <code>result$observed</code></li>
+<li>Test statistic only: <code>result$statistic</code></li>
+</ul>
+<p><code>result</code> is a list, and <code>$</code> picks one part of it, in the same way as <code>result$expected</code> and <code>result$p.value</code>.</p>
+
+<h3>(e) Decision and conclusion</h3>
+<p>From the output: $X^2 = 6.7272$, $df = 4$, p-value $= 0.151$. Because $0.151 \gt 0.05$: <strong>do not reject $H_0$</strong>. There is not sufficient evidence that payment method depends on the campus. This does not prove that they are independent.</p>
+
+<h3>(f) One pass of the loop</h3>
+<ol>
+<li><code>sample(payment, length(payment), replace = FALSE)</code> shuffles the 300 payment labels among the 300 customers. Each label is used once, so the totals stay 75 Cash, 124 Card and 101 App. The campus labels stay where they are, so the campus totals do not change either.</li>
+<li><code>table(campus, shuffled)</code> builds a new two-way table, and <code>chisq.test(...)$statistic</code> computes its $X^2$.</li>
+<li>That value is stored in <code>sim_stat[i]</code>.</li>
+</ol>
+<p>Under $H_0$, campus tells nothing about payment method, so any way of pairing the payment labels with the campuses is as likely as the pairing that was observed. Shuffling therefore produces tables that could happen when $H_0$ is true, and the 5000 values in <code>sim_stat</code> show how large $X^2$ gets by chance alone.</p>
+<p>The first output line, 6.727244, is the observed $X^2$. It equals the value from <code>chisq.test(ct)</code>. (<code>table()</code> puts the categories in alphabetical order, but the order of rows and columns does not change $X^2$.)</p>
+
+<h3>(g) The blank: <code>&gt;=</code></h3>
+<pre><code class="language-r">(pvalue &lt;- sum(sim_stat &gt;= obs_stat) / nsim)</code></pre>
+<p>Only large values of $X^2$ are evidence against independence, because $X^2$ squares the differences between observed and expected counts. So the p-value counts the simulated statistics that are at least as large as the observed one: the right tail only. Here $0.148 \times 5000 = 740$ of the shuffled tables gave $X^2 \ge 6.7272$.</p>
+
+<h3>(h) Meaning of the p-value: option B</h3>
+<ul>
+<li><strong>B</strong> is correct: the p-value is the probability of a statistic this large or larger, <em>assuming</em> $H_0$ is true.</li>
+<li><strong>A</strong> is wrong: a p-value is not the probability that $H_0$ is true.</li>
+<li><strong>C</strong> reads the p-value as a proportion of customers, which it is not.</li>
+<li><strong>D</strong> is wrong: not rejecting $H_0$ never proves it.</li>
+</ul>
+
+<h3>(i) Why 0.148 and 0.151 are close</h3>
+<p>Both p-values measure the same thing: the chance of $X^2 \ge 6.7272$ when campus and payment method are independent. The randomisation test finds it by simulation; <code>chisq.test</code> uses the chi-square distribution with 4 degrees of freedom. When the conditions hold (here every expected count is at least 15), the chi-square distribution describes the simulated statistics well, so the answers agree. The small difference comes from the randomness of 5000 shuffles; another seed would give a slightly different simulated p-value.</p>
+
+</div>
+</details>
+
+<details class="solution" id="q10">
+<summary>Question 10. Breakfast data as a 2 by 2 table: matching R to a hand calculation</summary>
+<div class="answer">
+<div class="question-text">
+
+<p>The breakfast data from Question 3 in a two-way table:</p>
+<pre><code class="language-r">bt &lt;- as.table(rbind(c(117, 63),
+                     c(132, 108)))
+dimnames(bt) &lt;- list(Group = c(&quot;Residence&quot;, &quot;Day&quot;),
+                     Breakfast = c(&quot;Yes&quot;, &quot;No&quot;))
+chisq.test(bt)</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>
+	Pearson&#x27;s Chi-squared test with Yates&#x27; continuity correction
+
+data:  bt
+X-squared = 3.857, df = 1, p-value = 0.04954</code></pre>
+
+<p>A hand calculation gives 4.2613, not 3.857. (a) Expected counts and the hand value. (b) Why R differs. (c) Corrected code. (d) The corrected p-value 0.03899 and Question 3. (e) Which test answers the claim of Question 3?</p>
+
+</div>
+
+<h3>(a) Expected counts and the hand value</h3>
+<p>Row totals: Residence 180, Day 240. Column totals: Yes $117 + 132 = 249$, No $63 + 108 = 171$. Table total: 420.</p>
+<table class="trace">
+<tr><th>Cell</th><th>$O$</th><th>$E$</th><th>$\frac{(O-E)^2}{E}$</th></tr>
+<tr><td>Residence, Yes</td><td>117</td><td>$\frac{180 \times 249}{420} = 106.7143$</td><td>$\frac{105.7959}{106.7143} = 0.9914$</td></tr>
+<tr><td>Residence, No</td><td>63</td><td>$\frac{180 \times 171}{420} = 73.2857$</td><td>$\frac{105.7959}{73.2857} = 1.4436$</td></tr>
+<tr><td>Day, Yes</td><td>132</td><td>$\frac{240 \times 249}{420} = 142.2857$</td><td>$\frac{105.7959}{142.2857} = 0.7435$</td></tr>
+<tr><td>Day, No</td><td>108</td><td>$\frac{240 \times 171}{420} = 97.7143$</td><td>$\frac{105.7959}{97.7143} = 1.0827$</td></tr>
+</table>
+<p>In every cell $|O - E| = 10.2857$, so every numerator is $10.2857^2 = 105.7959$.</p>
+$$\chi^2 = 0.9914 + 1.4436 + 0.7435 + 1.0827 = 4.2612$$
+<p>This is 4.2613 apart from rounding in the fourth decimal. The expected counts are the same numbers as $n_1\hat p_{\text{pool}}$, $n_1(1-\hat p_{\text{pool}})$, $n_2\hat p_{\text{pool}}$ and $n_2(1-\hat p_{\text{pool}})$ in Question 3(d).</p>
+
+<h3>(b) Why R's value is different</h3>
+<p>The first line of the output says <strong>"with Yates' continuity correction"</strong>. For a $2\times 2$ table, <code>chisq.test</code> applies this correction by default: it makes each difference $|O-E|$ smaller by 0.5 before squaring. This lowers $X^2$ from 4.2613 to 3.857. The formula sheet's $\chi^2$ has no correction. (For larger tables, such as the $3\times 3$ table in Question 9, R makes no correction.)</p>
+
+<h3>(c) Corrected code</h3>
+<pre><code class="language-r">chisq.test(bt, correct = FALSE)</code></pre>
+<p><strong>R output</strong></p>
+<pre><code>
+	Pearson&#x27;s Chi-squared test
+
+data:  bt
+X-squared = 4.2613, df = 1, p-value = 0.03899</code></pre>
+
+<h3>(d) Comparing with Question 3</h3>
+<p>The corrected p-value 0.03899 equals the <strong>two-sided</strong> p-value of the pooled $z$ test, <code>2 * pnorm(z, lower.tail = FALSE)</code> = 0.03899109. The statistics match as well: $z^2 = 2.064281^2 = 4.2613 = X^2$.</p>
+<p>A chi-square test has no direction. It measures how far the counts are from independence in any direction, so for a $2\times 2$ table it tests $H_A\colon p_1 - p_2 \neq 0$.</p>
+
+<h3>(e) Which test fits the claim in Question 3</h3>
+<p>The team claimed that residence students are <em>more</em> likely to eat breakfast: a one-sided claim, $H_A\colon p_1 - p_2 \gt 0$. Only the pooled $z$ test with the upper-tail p-value (0.0195) tests this direction. The chi-square test can only say whether the proportions differ. Both reject $H_0$ at the 5% level here, but the $z$ test answers the team's question.</p>
+
+</div>
+</details>
+
+  </main>
+  <footer class="site-footer"><div class="site-footer__inner">Swift Tuition | STC 122</div></footer>
+</body>
+</html>
